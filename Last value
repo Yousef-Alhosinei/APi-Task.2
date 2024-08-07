@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Last Row</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fetch Last Row</h1>
+
+    <?php
+    $connection = new mysqli("localhost", "root", "", "motors");
+
+    if ($connection->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
+    }
+
+    $stmt1 = $connection->prepare("SELECT * FROM motors ORDER BY MotorId DESC LIMIT 1");
+    $stmt1->execute();
+    $result1 = $stmt1->get_result();
+    $print_data = $result1->fetch_assoc();
+
+    $stmt2 = $connection->prepare("SELECT * FROM runvalues ORDER BY RunID DESC LIMIT 1");
+    $stmt2->execute();
+    $result2 = $stmt2->get_result();
+    $print_data2 = $result2->fetch_assoc();
+
+    $connection->close();
+    ?>
+
+    <h2>Motor Table</h2>
+    <table>
+        <tr>
+            <th>MotorId</th>
+            <th>Motor1</th>
+            <th>Motor2</th>
+            <th>Motor3</th>
+            <th>Motor4</th>
+            <th>Motor5</th>
+            <th>Motor6</th>
+        </tr>
+        <tr>
+            <td><?php echo $print_data['MotorId']; ?></td>
+            <td><?php echo $print_data['Motor1']; ?></td>
+            <td><?php echo $print_data['Motor2']; ?></td>
+            <td><?php echo $print_data['Motor3']; ?></td>
+            <td><?php echo $print_data['Motor4']; ?></td>
+            <td><?php echo $print_data['Motor5']; ?></td>
+            <td><?php echo $print_data['Motor6']; ?></td>
+        </tr>
+    </table>
+
+    <h2>Run Values</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>ON</th>
+            <th>OFF</th>
+        </tr>
+        <tr>
+            <td><?php echo $print_data2['RunID']; ?></td>
+            <td><?php echo $print_data2['ON']; ?></td>
+            <td><?php echo $print_data2['OFF']; ?></td>
+        </tr>
+    </table>
+</body>
+</html>
